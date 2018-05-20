@@ -1,27 +1,112 @@
-$.fn.boishakhCarousel = function(){
+$.fn.boishakhCarousel = function( options ){
 	// html usage please... add elament like this .boishakh-carousel
 	// > .bc-container > .bc-content > .bc-item
-    let container = this.find('.bc-container');
-    let content = this.find('.bc-content');
-    let item = this.find('.bc-item');
-    let containerWidth = $(window).width();
-    let contentWidth = $(window).width()*( item.length)+100;
-    let itemOnScreen = 2;
-    let itemWidth = containerWidth/itemOnScreen;
-    var sliderCount = 0;
+    let itIs = $(this);
+    // variablies to use
+    let containerWidth;
+    var contentHTML;
+    let containerClass    = itIs.children().attr('class');
+    let hasContainerClass = containerClass.indexOf('bc-container');
+    var opts            = $.extend( {}, $.fn.boishakhCarousel.defaults, options );
+    let container       = this.find('.bc-container');
+    let content         = this.find('.bc-content');
+    let item            = this.find('.bc-item');
+    // setting up width for carousel
+    containerWidth = this.parent().width();
+    if( typeof containerWidth == 'undefined'){
+      containerWidth  = $(window).width();
+    }
+    // end setting up width for carousel
+    let contentWidth    = ( containerWidth*( item.length ) )+100;
+    let itemOnScreen    = opts.items;
+    let itemWidth       = containerWidth/itemOnScreen;
+    let sliderCount     = 0;
+    let autoPlayIn      = 2000;
     let transformVal;
+    let mousePosition   = [];
+    let autoPlay;
+    let pauseOnHover    = true;
+    // responsive grid style code
+      if( $(window).width() >= '960' ){
+        itemOnScreen    = opts.items;
+      }else if( $(window).width() <= '360' ){
+        itemOnScreen    = opts.itemsOnMobile;
+      }else if( $(window).width() <= '720' ){
+        itemOnScreen    = opts.itemsOnTablet;
+      }else if( $(window).width() <= '960' ){
+        itemOnScreen    = opts.itemsBigTablet;
+      }
+    // responsive grid style code ends
+    // variablies to use end 
 
-    container.after('<span class="prev">Prev</span><span class="next">Next</span>');
+    // katsat
+    // katsat end
 
+
+    // structur the slider if not structured
+    // error here
+    if( hasContainerClass == -1 ){
+      contentHTML = itIs.html();
+      itIs.html( '<div class="bc-container">'+contentHTML+'</div>' );
+
+      container       = itIs.find('.bc-container');
+      content         = itIs.find('.bc-content');
+      item            = itIs.find('.bc-item');
+    }
+    // error end
+    // structur the slider if not structured end
+
+    // adding navigation
+    container.after('<span class="prev">'+opts.prev+'</span><span class="next">'+opts.next+'</span>');
+    // ading navigation end
+    // click functionalitiy 
     $('.next').click(function(){
     	runSlide('next');
-    	console.log( sliderCount );
     });
     $('.prev').click(function(){
     	runSlide('prev');
-    	console.log( sliderCount );
+    });
+    // click functionalitiy end
+    // Autoplay functionality
+    autoPlay = setInterval( function(){
+      runSlide('next');
+    }, autoPlayIn );
+    // Autoplay functionality end
+    // pause on hover functionality
+    if( pauseOnHover === true ){
+      $(this).on('mouseover',function(){
+        clearInterval(autoPlay);
+      });
+      $(this).on('mouseleave',function(){
+        container.css({'cursor':'auto','opacity':'1'});
+        autoPlay = setInterval( function(){
+            runSlide('next');
+          }, autoPlayIn 
+        );
+      });
+    }
+    // pause on hover functionality ends
+    // Drug functionalitiy 
+    container.on('mousedown',function(evt){
+      evt.preventDefault();
+      container.css({'cursor':'grab','opacity':'.8'});
+      mousePosition[0] = evt.clientX;
     });
 
+    container.on('mouseup',function(evt){
+      evt.preventDefault();
+      container.css({'cursor':'auto','opacity':'1'});
+      mousePosition[1] = evt.clientX;
+      var firstValInc = mousePosition[0]+10;
+      var firstValDec = mousePosition[0]-10;
+      if( firstValInc <= mousePosition[1] ){
+        runSlide('prev');
+      }else if( firstValDec >= mousePosition[1] ){
+        runSlide('next');
+      }
+    });
+    // Drug functionality end
+    // slider runing function
     function runSlide( param ){
 
     	if( param == 'next' ){
@@ -36,6 +121,13 @@ $.fn.boishakhCarousel = function(){
 	    		content.css('transform','translateX(-'+transformVal+'px)');
     		}
 
+
+        // adding active class to active items
+        itIs.children('.bc-container').children('.bc-content').children('.bc-item').removeClass('active');
+        for(i=0;i<itemOnScreen;i++){
+          itIs.children('.bc-container').children('.bc-content').children('.bc-item:nth-child('+(i+sliderCount+1)+')').addClass('active');
+        }
+
     	}else if( param == 'prev' ){
     		// after clicking previous button
     		if( sliderCount <= 0 ){
@@ -47,50 +139,41 @@ $.fn.boishakhCarousel = function(){
 	    		transformVal = itemWidth*sliderCount;
 	    		content.css('transform','translateX(-'+transformVal+'px)');
     		}
+
+        // adding active class to active items
+        itIs.children('.bc-container').children('.bc-content').children('.bc-item').removeClass('active');
+        for(i=0;i<itemOnScreen;i++){
+          itIs.children('.bc-container').children('.bc-content').children('.bc-item:nth-child('+(i+sliderCount+1)+')').addClass('active');
+        }
     	}
 
-    // 	if( sliderCount >= 0 && sliderCount <= item.length ){
-
-	   //  	if( param == 'next' ){
-
-	   //  		sliderCount += 1;
-	   //  		transformVal = itemWidth*sliderCount;
-	   //  		content.css('transform','translateX(-'+transformVal+'px)');
-	   //  	}else if( param == 'prev' ){
-
-	   //  		sliderCount -= 1;
-				// transformVal = itemWidth*sliderCount;
-	   //  		content.css('transform','translateX(-'+transformVal+'px)');
-	   //  	}
-
-    // 	}
-
-		// if( sliderCount <= 0 ){
-  //   		if( param == 'next' ){
-
-  //   			sliderCount = 1;
-	 //    		content.css('transform','translateX(-'+transformVal+'px)');
-
-  //   		}else if( param == 'prev' ){
-
-  //   			sliderCount = item.length;
-	 //    		sliderCount -= itemOnScreen;
-	 //    		content.css('transform','translateX(-'+transformVal+'px)');
-  //   		}
-    		
-  //   	}else if( sliderCount >= item.length ){
-  //   		if( param == 'next' ){
-  //   			sliderCount = 0;
-	 //    		content.css('transform','translateX(-'+transformVal+'px)');
-  //   		}else if( param == 'prev' ){
-  //   			sliderCount = item.length;
-	 //    		content.css('transform','translateX(-'+transformVal+'px)');
-  //   		}
-  //   	}
-
     }
+    // item background
+    item.css('background',opts.background);
+    // slider runing function end
+      container.width( containerWidth );
+      content.width( contentWidth );
 
-    container.width( containerWidth );
-    content.width( contentWidth );
-    item.width( itemWidth );
+      var marginVal = itemOnScreen*(opts.margin*2);
+      if( opts.margin > 0 ){
+        itemWidthAdj     = itemWidth - (opts.margin*2);
+        item.css( {'padding':opts.margin+'px','box-sizing':'content-box'} );
+        item.width( itemWidthAdj );
+      }else{
+        item.width( itemWidth );
+      }
+
+}
+// setting up defaults
+$.fn.boishakhCarousel.defaults = {
+  items: 2,
+  itemsBigTablet: 3,
+  itemsOnTablet: 2,
+  itemsOnMobile: 3,
+  margin: 2,
+  pauseOnHover: true,
+  autoStructure: true,
+  background: '#ffffff',
+  prev: 'Before',
+  next: 'After',
 }
