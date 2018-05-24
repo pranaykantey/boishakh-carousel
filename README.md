@@ -16,7 +16,7 @@ _using this css file in not required_
 ```
 <link rel="stylesheet" href="css/style.css">
 ```
-######_Boishakh carousel is a jquery plugin and dependent on jquery_
+###### _Boishakh carousel is a jquery plugin and dependent on jquery_
 
 ```javascript
 	$('.selector').boishakhCarousel();
@@ -35,3 +35,4 @@ _Available options with default value_
   prev: 'Before',
   next: 'After'
 ```
+###### **_Thanks to all_**
