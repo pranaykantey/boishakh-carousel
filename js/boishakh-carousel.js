@@ -1,21 +1,18 @@
 $.fn.boishakhCarousel = function( options ){
-	// html usage please... add elament like this .boishakh-carousel
-	// > .bc-container > .bc-content > .bc-item
-    let itIs = $(this);
+  // html usage please... add elament like this .boishakh-carousel
+  // > .bc-container > .bc-content > .bc-item
+    let itIs = this;
     // variablies to use
     let containerWidth;
-    var contentHTML;
+    let contentHTML;
     let containerClass    = itIs.children().attr('class');
     let hasContainerClass = containerClass.indexOf('bc-container');
-    var opts            = $.extend( {}, $.fn.boishakhCarousel.defaults, options );
+    let opts            = $.extend( {}, $.fn.boishakhCarousel.defaults, options );
     let container       = this.find('.bc-container');
     let content         = this.find('.bc-content');
     let item            = this.find('.bc-item');
     // setting up width for carousel
     containerWidth = this.parent().width();
-    if( typeof containerWidth == 'undefined'){
-      containerWidth  = $(window).width();
-    }
     // end setting up width for carousel
     let contentWidth    = ( containerWidth*( item.length ) )+100;
     let itemOnScreen    = opts.items;
@@ -26,6 +23,11 @@ $.fn.boishakhCarousel = function( options ){
     let mousePosition   = [];
     let autoPlay;
     let pauseOnHover    = true;
+    // katsat
+    if( typeof containerWidth === 'undefined'){
+      containerWidth  = $(window).width();
+    }
+    // katsat end
     // responsive grid style code
       if( $(window).width() >= '960' ){
         itemOnScreen    = opts.items;
@@ -45,7 +47,7 @@ $.fn.boishakhCarousel = function( options ){
 
     // structur the slider if not structured
     // error here
-    if( hasContainerClass == -1 ){
+    if( hasContainerClass === -1 ){
       contentHTML = itIs.html();
       itIs.html( '<div class="bc-container">'+contentHTML+'</div>' );
 
@@ -61,10 +63,10 @@ $.fn.boishakhCarousel = function( options ){
     // ading navigation end
     // click functionalitiy 
     $('.next').click(function(){
-    	runSlide('next');
+      runSlide('next');
     });
     $('.prev').click(function(){
-    	runSlide('prev');
+      runSlide('prev');
     });
     // click functionalitiy end
     // Autoplay functionality
@@ -109,17 +111,17 @@ $.fn.boishakhCarousel = function( options ){
     // slider runing function
     function runSlide( param ){
 
-    	if( param == 'next' ){
-    		// after clicking next button
-    		if( sliderCount >= item.length-itemOnScreen ){
-				sliderCount = 0;
-				transformVal = itemWidth*sliderCount;
-	    		content.css('transform','translateX(-'+transformVal+'px)');
-    		}else if( sliderCount >= 0 && sliderCount <= item.length-itemOnScreen ){
-	    		sliderCount += 1;
-	    		transformVal = itemWidth*sliderCount;
-	    		content.css('transform','translateX(-'+transformVal+'px)');
-    		}
+      if( param === 'next' ){
+        // after clicking next button
+        if( sliderCount >= item.length-itemOnScreen ){
+        sliderCount = 0;
+        transformVal = itemWidth*sliderCount;
+          content.css('transform','translateX(-'+transformVal+'px)');
+        }else if( sliderCount >= 0 && sliderCount <= item.length-itemOnScreen ){
+          sliderCount += 1;
+          transformVal = itemWidth*sliderCount;
+          content.css('transform','translateX(-'+transformVal+'px)');
+        }
 
 
         // adding active class to active items
@@ -128,24 +130,24 @@ $.fn.boishakhCarousel = function( options ){
           itIs.children('.bc-container').children('.bc-content').children('.bc-item:nth-child('+(i+sliderCount+1)+')').addClass('active');
         }
 
-    	}else if( param == 'prev' ){
-    		// after clicking previous button
-    		if( sliderCount <= 0 ){
-				sliderCount = item.length-itemOnScreen;
-				transformVal = itemWidth*sliderCount;
-	    		content.css('transform','translateX(-'+transformVal+'px)');
-    		}else if( sliderCount >= 0 && sliderCount <= item.length ){
-	    		sliderCount -= 1;
-	    		transformVal = itemWidth*sliderCount;
-	    		content.css('transform','translateX(-'+transformVal+'px)');
-    		}
+      }else if( param === 'prev' ){
+        // after clicking previous button
+        if( sliderCount <= 0 ){
+        sliderCount = item.length-itemOnScreen;
+        transformVal = itemWidth*sliderCount;
+          content.css('transform','translateX(-'+transformVal+'px)');
+        }else if( sliderCount >= 0 && sliderCount <= item.length ){
+          sliderCount -= 1;
+          transformVal = itemWidth*sliderCount;
+          content.css('transform','translateX(-'+transformVal+'px)');
+        }
 
         // adding active class to active items
         itIs.children('.bc-container').children('.bc-content').children('.bc-item').removeClass('active');
         for(i=0;i<itemOnScreen;i++){
           itIs.children('.bc-container').children('.bc-content').children('.bc-item:nth-child('+(i+sliderCount+1)+')').addClass('active');
         }
-    	}
+      }
 
     }
     // item background
@@ -163,7 +165,7 @@ $.fn.boishakhCarousel = function( options ){
         item.width( itemWidth );
       }
 
-}
+};
 // setting up defaults
 $.fn.boishakhCarousel.defaults = {
   items: 2,
@@ -175,5 +177,5 @@ $.fn.boishakhCarousel.defaults = {
   autoStructure: true,
   background: '#ffffff',
   prev: 'Before',
-  next: 'After',
-}
+  next: 'After'
+};
