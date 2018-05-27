@@ -1,3 +1,5 @@
+(function($){
+
 $.fn.boishakhCarousel = function( options ){
   // html usage please... add elament like this .boishakh-carousel
   // > .bc-container > .bc-content > .bc-item
@@ -70,22 +72,23 @@ $.fn.boishakhCarousel = function( options ){
     });
     // click functionalitiy end
     // Autoplay functionality
-    autoPlay = setInterval( function(){
-      runSlide('next');
-    }, autoPlayIn );
-    // Autoplay functionality end
-    // pause on hover functionality
-    if( pauseOnHover === true ){
-      $(this).on('mouseover',function(){
-        clearInterval(autoPlay);
-      });
-      $(this).on('mouseleave',function(){
-        container.css({'cursor':'auto','opacity':'1'});
-        autoPlay = setInterval( function(){
-            runSlide('next');
-          }, autoPlayIn 
-        );
-      });
+    if( opts.autoPlay === true ){
+      autoPlay = setInterval( function(){
+        runSlide('next');
+      }, autoPlayIn );
+      // pause on hover functionality
+      if( pauseOnHover === true ){
+        $(this).on('mouseover',function(){
+          clearInterval(autoPlay);
+        });
+        $(this).on('mouseleave',function(){
+          container.css({'cursor':'auto','opacity':'1'});
+          autoPlay = setInterval( function(){
+              runSlide('next');
+            }, autoPlayIn 
+          );
+        });
+      }
     }
     // pause on hover functionality ends
     // Drug functionalitiy 
@@ -97,6 +100,7 @@ $.fn.boishakhCarousel = function( options ){
 
     container.on('mouseup',function(evt){
       evt.preventDefault();
+
       container.css({'cursor':'auto','opacity':'1'});
       mousePosition[1] = evt.clientX;
       var firstValInc = mousePosition[0]+10;
@@ -106,6 +110,28 @@ $.fn.boishakhCarousel = function( options ){
       }else if( firstValDec >= mousePosition[1] ){
         runSlide('next');
       }
+    });
+    // slider link functionality
+    $('.bc-item a').click(function(){
+      return false;
+    });
+    var mouseStart;
+    $('.bc-item a').on('mousedown',function(e){
+       mouseStart  = e.clientX;
+    });
+    $('.bc-item a').on('mouseup',function(e){
+      e.preventDefault();
+      var ee = e;
+      var mouseEnd    = e.clientX;
+      var location = $(this).attr('href');
+
+      setTimeout(function(){
+        if( mouseStart === mouseEnd && e.button === 0 ){
+          window.location.href = location;
+        }
+        return false;
+      },1);
+
     });
     // Drug functionality end
     // slider runing function
@@ -177,5 +203,7 @@ $.fn.boishakhCarousel.defaults = {
   autoStructure: true,
   background: '#ffffff',
   prev: 'Before',
-  next: 'After'
+  next: 'After',
+  autoPlay: false
 };
+}(jQuery));

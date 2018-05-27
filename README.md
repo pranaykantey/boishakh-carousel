@@ -12,15 +12,31 @@ _After includint jquery include Boishakh carousel JS file._
 <script type="text/javascript" src="js/boishakh-carousel.js" />
 ```
 ##### *CSS file*
-_using this css file in not required_
 ```
 <link rel="stylesheet" href="css/style.css">
 ```
 ###### _Boishakh carousel is a jquery plugin and dependent on jquery_
 
 ```javascript
-	$('.selector').boishakhCarousel();
+$('.boishakh-carousel').boishakhCarousel();
 ```
+#### Use html like this
+```html
+<div class="boishakh-carousel">
+  <div class="bc-item">
+    <p>First slide content goes here</p>
+  </div>
+  <div class="bc-item">
+    <p>Second slide content goes here</p>
+  </div>
+  <div class="bc-item">
+    <p>Third slide content goes here</p>
+  </div>
+  <div class="bc-item">
+    <p>Fourth slide content goes here</p>
+  </div>
+</div>
+````
 ### Available Options:
 _Available options with default value_
 ```javascript
