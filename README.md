@@ -1,6 +1,7 @@
 # Boishakh carousel
 ##### A simple carousel with jquery, and easy to use.
 **Boishakh slider** is made to create simple image carousel.
+## Demo Link: https://pranaykantey.github.io/boishakh-carousel/
 ### How to use?
 #### include all required css and js files.
 ##### *JavaScript files*
